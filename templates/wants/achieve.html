@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <h3 class="mt-4">100Wants達成入力</h3>
+
+  <form method="post" novalidate>
+    {% csrf_token %}
+
+    <table class="table">
+      <tr>
+        <th>Wants</th>
+        <td>{{ want.content }}</td>
+      </tr>
+      <tr>
+        <th>目標日付</th>
+        <td>{{ want.target_date | date:"Y/m/d" }}</td>
+      </tr>
+      <tr>
+        <th>公開設定</th>
+        <td>{% if want.publish_set == 1 %}公開{% else %}非公開{% endif %}</td>
+      </tr>
+      <tr>
+        <th>達成日</th>
+        <td>{{ form.achieve_date }}</td>
+      </tr>
+      <tr>
+        <th>達成コメント</th>
+        <td>{{ form.achieve_text }}</td>
+      </tr>
+      <tr>
+        <th>参照URL</th>
+        <td>{{ form.achieve_url }}</td>
+      </tr>
+
+      {#{ form }#}
+
+    </table>
+
+    <button class="btn btn-success" type="submit">送信</button>
+  </form>
+
+{% endblock %}

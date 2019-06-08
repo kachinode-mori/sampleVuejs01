@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h3 class="mt-4">削除</h3>
+
+  <p class="text-danger font-weight-bold">以下の内容を削除しますか？</p>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <!-- <table class="table">
+      <tr>
+        <th>Wants</th>
+        <td>{{ want.content }}</td>
+      </tr>
+      <tr>
+        <th>完了／未完了</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th>締切日</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th>メモ</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th>重要</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th>作成日時</th>
+        <td></td>
+      </tr>
+      <tr>
+        <th>更新日時</th>
+        <td></td>
+      </tr>
+    </table> -->
+    <button class="btn btn-danger" type="submit">削除</button>
+  </form>
+
+{% endblock %}

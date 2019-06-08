@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>want app api test</title>
+</head>
+<style>
+  .box {
+    text-align: center;
+    padding-top: 10px;
+  }
+  .info {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 24px;
+  }
+</style>
+<body>
+  <div id="app" class="box">
+    <h1>test</h1>
+    <div class="info">
+      <p>{{ id }}</p>
+      <p>{{ content }}</p>
+      <p>{{ status }}</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        id: null,
+        content: null,
+        status: null
+      },
+      mounted: function(){
+        axios.get('http://127.0.0.1:8000/api/wants/34/').then(function(response){
+          console.log(response)
+          this.id = response.data.id
+          this.content = response.data.content
+          this.status = response.data.status
+        }.bind(this))
+      }
+    })
+  </script>
+
+</body>
+</html>

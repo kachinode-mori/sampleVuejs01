@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/accounts.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="text-center logo my-4">100 Wants List</h1>
+    {% block content1 %}
+    {% endblock %}
+  </div>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load gravatar %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+  <!-- <h1 id="myfontset">100 wants list</h1> -->
+  <div id="myfontset">
+    <img src="{% static 'img/homelogo.png' %}" class="img-fluid rounded mx-auto d-block" style="max-height: 500px;">
+  </div>
+  <div class="row">
+    <div class="col-md-12" id="myfontset1">
+      <h5>人生でやりたいことリスト100 / 人生でやってみたい100のこと</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <p style="visibility: hidden;">space</p>
+    </div>
+    <div class="col-md-8">
+      <p>人生でやってみたいことをリストにしてみよう！どんなに大きなことでも、どんなにちっぽけでもいいので書き出してみると、
+        「自分の人生における優先順位」・「自分の本当に好きなこと」・「これから自分はどんな人生を送りたいか」 が見えてきます！</p>
+    </div>
+    <div class="col-md-2">
+      <p style="visibility: hidden;">space</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" id="myfontset2">
+      {% if user.is_authenticated %}
+        <strong><p>ようこそ {{ user.nickname }} さん</p></strong>
+        <a href="{% url 'wants_list' user.id %}" class="btn btn-info">My 100 Wants List</a>
+      {% else %}
+        <strong><p>ログイン or 新規ユーザ作成で使ってみる！</p></strong>
+        <form class="form-inline justify-content-center">
+          <a href="{% url 'login' %}" class="btn btn-info">ログイン</a>
+          <br><br>
+          <a href="{% url 'signup' %}" class="btn btn-info ml-2">新規ユーザ登録</a>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <br><hr><br>
+
+  <div class="row">
+    <div class="col-md-2">
+      <p style="visibility: hidden;">space</p>
+    </div>
+    <div class="col-md-8 homeimg">
+      <li>できること(Can)ではなく、とにかくやりたいこと(Want)を書き出そう！</li>
+      <li>いつでも編集ダウンロード可能＆100個以上でもOKです</li>
+      <li>公開設定をすると、他の人にもwantsリストを公開できます(見せたくない場合は非公開に)</li>
+      <li>他の人のWantsリストも参照できます(公開限定)  共感できるものは、「いいね」しよう</li>
+      <br>
+      <img src="{% static 'img/home.png' %}" class="img-fluid rounded mx-auto d-block" style="max-height: 500px;">
+    </div>
+    <div class="col-md-2">
+      <p style="visibility: hidden;">space</p>
+    </div>
+  </div>
+
+  <br><hr><br>
+
+  <div class="row">
+    <div class="col-md-6 mybox">
+      <h6 class="boxtitle">タイムライン：みんなのWants(公開のみ)</h6>
+      {% for want in wants %}
+        {% for user in users %}
+          {% if user.id == want.user_id %}
+          <hr>
+          <div class="media">
+            <a href="{% url 'wants_list' user.id %}">
+              <img src="{{ user.email|gravatar }}" alt="{{ user.nickname }}" class="mr-3 w-80 rounded" width="32" height="32">
+            </a>
+            <div class="media-body">
+              <h6 class="mt-0">
+                <a href="{% url 'wants_list' user.id %}">{{ user.nickname }}</a>
+              </h6>
+              {{ want.content }} <i class="fa fa-thumbs-o-up"></i> {{ want.like_num }}
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+    <div class="col-md-6 mybox">
+      <h6  class="boxtitle">ランキング：いいね獲得ユーザ(公開のみ)</h6>
+      {% for rank in ranks %}
+        {% for user in users %}
+          {% if user.id == rank.user_id %}
+          <hr>
+          <div class="media">
+            <a href="{% url 'wants_list' user.id %}">
+              <img src="{{ user.email|gravatar }}" alt="{{ user.nickname }}" class="mr-3 w-80 rounded" width="32" height="32">
+            </a>
+            <div class="media-body">
+              <h6 class="mt-0">
+                <a href="{% url 'wants_list' user.id %}">{{ user.nickname }}</a>
+              </h6>
+              {{ rank.content }} <i class="fa fa-thumbs-o-up"></i> {{ rank.like_num }}
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

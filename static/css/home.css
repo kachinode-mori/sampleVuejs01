@@ -1,0 +1,66 @@
+#myfontset {
+  /* font-family: 'Shrikhand', cursive; */
+  /* text-align: center; */
+  /* color: darkblue; */
+  /* font-size: 48px; */
+  padding: 70px 0px 0px 0px;
+}
+#myfontset1 {
+  text-align: center;
+  font-size: 14px;
+  padding: 70px 0px 40px 0px;
+}
+#myfontset2 {
+  text-align: center;
+  font-size: 16px;
+  padding: 70px 0px 40px 0px;
+}
+.homeimg {
+  color: white;
+  background: rgb(1, 120, 255);
+  padding: 10px;
+  border-radius: 10px;
+}
+.mybox {
+  padding: 10px;
+  border:1px solid lightgray;
+}
+.boxtitle {
+  color: white;
+  background: rgb(77, 1, 255);
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+/* #mybox1 {
+  margin: 15px 0px;
+  padding: 10px;
+  border: 1px solid lightgray;
+  background-color:rgb(238, 239, 248);
+  color: blue;
+}
+#mybox2 {
+  margin: 15px 0px;
+  padding: 10px;
+  border: 1px solid lightgray;
+  background-color:rgb(238, 239, 248);
+}
+#mybox3 {
+  margin: 15px 0px;
+  padding: 10px;
+  border: 1px solid lightgray;
+  background-color:rgb(238, 239, 248);
+}
+#mybox4 {
+  padding: 10px;
+  border:1px solid lightgray;
+}
+#mybox5 {
+  padding: 10px;
+  border:1px solid lightgray;
+}
+#mybox6 {
+  padding: 10px;
+  border:1px solid lightgray;
+} */

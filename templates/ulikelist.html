@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% load gravatar %}
+
+{% block content %}
+
+　<h2>Likes一覧</h2>
+
+  {% for like in ulikes %}
+    {% for user in users %}
+      {% if user.id == like.want.user_id %}
+        {% if like.want.publish_set == 1 %}
+        <hr>
+        <div class="media">
+          <a href="{% url 'wants_list' user.id %}">
+            <img src="{{ user.email|gravatar }}" alt="{{ user.nickname }}" class="mr-3 w-80 rounded" width="48" height="48">
+          </a>
+          <div class="media-body">
+            <h5 class="mt-0">
+              <a href="{% url 'wants_list' user.id %}">{{ user.nickname }}</a>
+            </h5>
+            Want : {{ like.want.content }}
+          </div>
+        </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% endfor %}
+
+  <br>
+  <br>
+  <nav aria-label="Topics pagination" class="mb-4">
+    <ul class="pagination">
+      {% if ulikes.number > 1 %}
+        <li class="page-item">
+          <a class="page-link" href="?page=1">First</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">First</span>
+        </li>
+      {% endif %}
+
+      {% if ulikes.has_previous %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ ulikes.previous_page_number }}">Previous</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Previous</span>
+        </li>
+      {% endif %}
+
+      {% for page_num in ulikes.paginator.page_range %}
+        {% if ulikes.number == page_num %}
+          <li class="page-item active">
+            <span class="page-link">
+              {{ page_num }}
+              <span class="sr-only">(current)</span>
+            </span>
+          </li>
+        {% elif page_num > ulikes.number|add:'-3' and page_num < ulikes.number|add:'3' %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_num }}">{{ page_num }}</a>
+          </li>
+        {% endif %}
+      {% endfor %}
+
+      {% if ulikes.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ ulikes.next_page_number }}">Next</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Next</span>
+        </li>
+      {% endif %}
+
+      {% if ulikes.number != ulikes.paginator.num_pages %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ ulikes.paginator.num_pages }}">Last</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled">
+          <span class="page-link">Last</span>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+
+{% endblock %}

@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% load gravatar %}
+
+{% block stylesheet %}
+  <link rel="stylesheet" href="{% static 'css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<br>
+{% for userl in user_list %}
+<div class="card-group">
+  <div class="card">
+    <div class="card-body">
+      <img src="{{ userl.email|gravatar }}" alt="{{ userl.nickname }}" class="w-30 rounded">
+      <span><a href="{% url 'wants_list' id=userl.id %}"><strong>{{ userl.nickname }}</strong></a></span>
+      <br><br>
+      {% if userl.id == user.id %}
+        <small><a href="{% url 'wants_create' %}" class="btn-sm btn-primary">Wants作成</a></small>
+        <small><a href="{% url 'ulike_list' id=userl.id %}" class="btn-sm btn-warning">Likes一覧</a></small>
+      {% else %}
+        <small><button class="btn-sm btn-primary disabled">Wants作成</button></small>
+        <small><button class="btn-sm btn-warning disabled">Likes一覧</button></small>
+      {% endif %}
+      <span style="margin: 0 0 0 15px;"></span><i class="fa fa-thumbs-o-up"> {{ likescount }}</i>
+      <span style="margin: 0 0 0 15px;">
+        {% if userl.twitter_url != '' %}
+          <a href="https://twitter.com/{{ userl.twitter_url }}" target="_blank"><i class="fa fa-twitter fa-1x"></i></a>
+        {% endif %}
+      </span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">100 Wants List :
+        <span class="badge badge-dark">{{ wantscount }}</span>
+        {% if userl.id == user.id %}
+          <small><a href="{% url 'export' user.id %}" class="btn-sm btn-success">List Download</a></small>
+        {% endif %}
+      </h5>
+      <div class="card-text"><small class="text-muted">未着手：{{ nostart }}</small></div>
+      <div class="card-text"><small class="text-muted">実施中：{{ doing }}</small></div>
+      <div class="card-text"><small class="text-muted">達成： {{ done }}</small></div>
+    </div>
+  </div>
+  <div class="card">
+    <canvas id="myChart"></canvas>
+  </div>
+</div>
+{% endfor %}
+
+<!-- <div class="col-xs-12"> -->
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead>
+      <tr class="table-primary center">
+        <th scope="col"></th>
+        <th scope="col">Status</th>
+        <th scope="col">No</th>
+        <th scope="col">Wants</th>
+        <th scope="col">Open</th>
+        <th scope="col">目標日付</th>
+        <th scope="col">達成入力</th>
+        <th scope="col">編集</th>
+        <th scope="col">削除</th>
+        <th scope="col">Likes</th>
+        <th scope="col">並び</th>
+      </tr>
+    </thead>
+    <tbody id="selections">
+    {% for want in want_list %}
+      {% if want.user_id == user.id %}
+        <tr>
+          <td class="selection center"><i class="fa fa-bars" aria-hidden="true"></i></td>
+          {% if want.status == 'nostart' %}
+            <td class="table-success center" style="color:green;">未着手</td>
+          {% elif want.status == 'doing' %}
+            <td class="table-info center" style="color:blue;">実施中</td>
+          {% else %}
+            <td class="table-active center">達成</td>
+          {% endif %}
+          <td class="center">{{ forloop.counter }}</td>
+          <td>{{ want.content }}</td>
+          <td class="center">{% if want.publish_set == 1 %}公開{% else %}非公開{% endif %}</td>
+          <td class="center">{{ want.target_date | date:"Y/m/d" }}</td>
+          <td class="center">
+            {% if want.status == 'done' %}
+              <a href="{% url 'wants_achieve' want.id %}" class="btn btn-outline-info btn-sm">達成入力</a>
+            {% else %}
+              <button class="btn btn-outline-info btn-sm disabled">達成入力</button>
+            {% endif %}
+          </td>
+          <td class="center">
+            <a href="{% url 'wants_update' want.id %}" class="btn btn-outline-success btn-sm">編集</a>
+          </td>
+          <td class="center">
+            <form action="{% url 'wants_delete' want.id %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-outline-danger btn-sm" type="submit" onclick="return disp()">削除</button>
+            </form>
+          </td>
+          <td class="center">
+            <i class="fa fa-thumbs-o-up"></i> {{ want.like_num }}
+          </td>
+          <td class="center">
+            {{ want.display_order }}
+          </td>
+        </tr>
+      {% endif %}
+    {% endfor %}
+    </tbody>
+    <tbody>
+    {% for want in want_list %}
+      {% if want.user_id != user.id %}
+        {% if want.publish_set == 1 %}
+        <tr>
+          <td> - </td>
+          {% if want.status == 'nostart' %}
+            <td class="table-success center" style="color:green;">未着手</td>
+          {% elif want.status == 'doing' %}
+            <td class="table-info center" style="color:blue;">実施中</td>
+          {% else %}
+            <td class="table-active center">達成</td>
+          {% endif %}
+          <td class="center">{{ forloop.counter }}</td>
+          <td>{{ want.content }}</td>
+          <td class="center">公開</td>
+          <td class="center">{{ want.target_date | date:"Y/m/d" }}</td>
+          <td class="center"><button class="btn btn-outline-info btn-sm disabled">達成入力</button></td>
+          <td class="center"><button class="btn btn-outline-success btn-sm disabled">編集</button></td>
+          <td class="center"><button class="btn btn-outline-danger btn-sm disabled">削除</button></td>
+          <td class="center"><a href="{% url 'wants_like' want.id %}"><i class="fa fa-thumbs-o-up"></i></a> {{ want.like_num }}</td>
+        </tr>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+function disp(){
+  var result = window.confirm("本当に削除しますか？");
+  if(result){
+    //yesの処理（何もぜず進む）
+  } else {
+    //cancelの処理
+    return false;
+  }
+}
+</script>
+
+<script>
+{% if messages %}
+  {% for message in messages %}
+    alert('{{ message }}');
+  {% endfor %}
+{% endif %}
+</script>
+
+<script>
+  new Chart(document.getElementById("myChart"), {
+    type: "doughnut",
+    data: {
+      labels: ["未着手", "実施中", "達成"],
+      datasets: [
+        {
+          data: [{{ nostart }}, {{ doing }}, {{ done }}],
+          backgroundColor: [
+            "lightgreen",
+            "lightblue",
+            "lightgray",
+          ]
+        }
+      ]
+    }
+  });
+</script>
+
+<script>
+$(function() {
+  Sortable.create(selections, {
+    handle: '.selection',
+    animation: 150,
+    delay: 150,
+    onEnd: function() {
+      console.log('動かしました');
+    }
+  });
+});
+</script>
+
+{% endblock %}

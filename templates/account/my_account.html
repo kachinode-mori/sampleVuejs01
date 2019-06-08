@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}My account{% endblock %}
+
+{% block content %}
+  <br>
+  <div class="row">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+      <p>ユーザアバター(ユーザ画像アイコン)について</p>
+      <p>グローバルに認識されるアバターGravatarを利用しています。アバターを表示するには、gravatarと同じE-mailアドレスにてログインをして下さい。</p>
+      <p><a href="https://ja.gravatar.com/" target="_blank">gravatar.comにログインしてアバターを登録<i class="fa fa-external-link"></i></a></p>
+      <hr>
+      <br>
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% include 'includes/form.html' %}
+        <button type="submit" class="btn btn-success">Save changes</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

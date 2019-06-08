@@ -1,0 +1,7 @@
+.center {
+  text-align: center;
+}
+.selection{
+  cursor: move;
+  color: rgb(0, 174, 255);
+}

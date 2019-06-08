@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial=1.0">
+    <link rel="icon" href="{% static 'img/favicon.png' %}" type="image/png">
+    <title>{% block title %}100 wants List{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css?family=Anton|Shrikhand" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sticky-footer.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous"> -->
+    {% block stylesheet %}{% endblock %}
+  </head>
+  <body>
+
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: darkblue;">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'wants' %}">100 Wants List</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu" aria-controls="mainMenu" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainMenu">
+          {% if user.is_authenticated %}
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle btn btn-primary btn-sm" style="color: white;" href="#" id="userMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  {{ user.nickname }}
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
+                  <a class="dropdown-item" href="{% url 'wants_list' user.id %}">My Wants List</a>
+                  <a class="dropdown-item" href="{% url 'my_account' %}">アカウント設定</a>
+                  <a class="dropdown-item" href="{% url 'password_change' %}">パスワード変更</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="{% url 'logout' %}">ログアウト</a>
+                </div>
+              </li>
+            </ul>
+          {% else %}
+            <form class="form-inline ml-auto">
+              <a href="{% url 'login' %}" class="btn btn-info">ログイン</a>
+              <a href="{% url 'signup' %}" class="btn btn-info ml-2">新規ユーザ登録</a>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      {% block content %}
+
+      {% endblock %}
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">100 Wants List について</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>「人生でやってみたい100のこと」を書き出してみよう！</p>
+            <p>100個書くのは意外と大変ですが、いつでも追加・変更・削除・そしてダウンロード可能です。
+              どんなに大きなことでも、どんなにちっぽけでもいいので、とにかく書き出してみると、
+              <strong>「自分の人生における優先順位」・「自分の本当に好きなこと」・「これから自分はどんな人生を送りたいか」</strong>
+              が見えてくると思います。前提条件はすべて取っ払い考えることがポイントです。</p>
+            <p>リストは公開/非公開設定ができます。
+              公開にすると、他の人にもwantsリストを公開できます(見せたくない場合は非公開にしてください)
+              他の人のWantsリストも参照できるので(公開限定)、共感できるものは「いいね」しましょう！</p>
+            </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <br>
+    <footer class="footer">
+      <div class="container">
+        <div class="row text-muted">
+          <div class="col-sm">
+            <span><a href="{% url 'userlist' %}">User List</a></span>
+            <span>  /  <a href="{% url 'rank_list' %}">Ranking List</a></span>
+          </div>
+          <div class="col-sm" style="text-align: center;">&copy; 2018 100wants List.</div>
+          <div class="col-sm" style="text-align: right;">
+            <span><a href="#" data-toggle="modal" data-target="#exampleModal">About</a></span>
+            <span>  /  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfAlVQk12HE25ogzrKtQEY-qZdHk3xqeH2Jg8esD5ybwjH3Ow/viewform?embedded=true" target="_blank">Contact</a></span>
+            <span>  /  <a href="https://www.anothersky.jp/" target="_blank">Admin WebSite<i class="fa fa-external-link"></i></a></span>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    {% block javascript %}{% endblock %}
+
+    <script>
+    </script>
+
+  </body>
+
+  </html>
